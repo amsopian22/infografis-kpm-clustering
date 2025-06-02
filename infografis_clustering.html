@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografis Profil & Rekomendasi Klaster KPM BPNT Samarinda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            color: #073B4C; 
+        }
+        .chart-container-donut {
+            position: relative;
+            width: 100%;
+            max-width: 400px; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+         .chart-container-bar {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; 
+            max-height: 450px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container-donut {
+                height: 320px;
+            }
+            .chart-container-bar {
+                height: 400px;
+            }
+        }
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(255, 255, 255, 0.97); 
+            backdrop-filter: blur(8px);
+        }
+        
+        .primary-bg { background-color: #0077B6; } 
+        .primary-text { color: #0077B6; }
+        .secondary-bg { background-color: #00B4D8; } 
+        .secondary-text { color: #00B4D8; }
+        .accent-bg { background-color: #90E0EF; } 
+        .accent-text { color: #90E0EF; }
+        .bg-light-blue-card { background-color: #F0F9FF; } 
+        .text-dark-theme { color: #023047; } 
+        .bg-very-light-blue { background-color: #CAF0F8; }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 70px; 
+            height: 3px; 
+            background-color: #00B4D8; 
+            margin-top: 10px; 
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .card-shadow {
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08), 0 3px 7px -3px rgba(0, 0, 0, 0.05); 
+        }
+        .nav-link {
+            color: #073B4C;
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            padding-bottom: 4px; 
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover {
+            color: #0077B6; 
+            border-bottom-color: #90E0EF; 
+        }
+        .active-nav-link {
+            color: #0077B6;
+            font-weight: 600;
+            border-bottom-color: #0077B6;
+        }
+        h1, h2, h3, h4 {
+            color: #023047; 
+        }
+        .profile-list li, .recommendation-list li {
+            padding-bottom: 0.4rem; 
+            display: flex;
+            align-items: flex-start;
+            text-align: left;
+        }
+        .profile-list li::before {
+            content: "•";
+            color: #0077B6;
+            font-weight: bold;
+            display: inline-block; 
+            width: 1em;
+            margin-left: -1em;
+            margin-right: 0.5em;
+            flex-shrink: 0;
+        }
+        .recommendation-list li::before {
+            content: "✓"; 
+            color: #00B4D8; 
+            font-weight: bold;
+            display: inline-block; 
+            width: 1em;
+            margin-left: -1em;
+            margin-right: 0.5em;
+            flex-shrink: 0;
+        }
+        .rekomendasi-card {
+            min-height: 280px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        th, td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-bottom-width: 1px;
+            border-color: #E5E7EB; /* gray-200 */
+        }
+        thead th {
+            background-color: #F9FAFB; /* gray-50 */
+            font-weight: 600;
+            text-align: left;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <nav class="sticky-nav shadow-md">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-dark-theme">Profil & Rekomendasi Klaster</span>
+                </div>
+                <div class="hidden md:block">
+                    <div id="desktop-nav-links" class="ml-10 flex items-baseline space-x-4">
+                        <a href="#pendahuluan" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Pendahuluan</a>
+                        <a href="#k2" class="nav-link px-3 py-2 rounded-md text-sm font-medium">K=2 Klaster</a>
+                        <a href="#k3" class="nav-link px-3 py-2 rounded-md text-sm font-medium">K=3 Klaster</a>
+                        <a href="#k4" class="nav-link px-3 py-2 rounded-md text-sm font-medium">K=4 Klaster</a>
+                        <a href="#rekomendasi-kebijakan-umum" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Rekomendasi Umum</a>
+                        <a href="#kesimpulan-infografis" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Kesimpulan</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-dark-theme hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-text">
+                        <span class="sr-only">Buka menu utama</span>
+                        <svg class="block h-6 w-6" id="icon-menu" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" id="icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#pendahuluan" class="nav-link block px-3 py-2 rounded-md text-base font-medium">Pendahuluan</a>
+                <a href="#k2" class="nav-link block px-3 py-2 rounded-md text-base font-medium">K=2 Klaster</a>
+                <a href="#k3" class="nav-link block px-3 py-2 rounded-md text-base font-medium">K=3 Klaster</a>
+                <a href="#k4" class="nav-link block px-3 py-2 rounded-md text-base font-medium">K=4 Klaster</a>
+                <a href="#rekomendasi-kebijakan-umum" class="nav-link block px-3 py-2 rounded-md text-base font-medium">Rekomendasi Umum</a>
+                <a href="#kesimpulan-infografis" class="nav-link block px-3 py-2 rounded-md text-base font-medium">Kesimpulan</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="primary-bg text-white py-16 sm:py-20 lg:py-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-white">
+                Profil dan Rekomendasi Klaster KPM BPNT Kota Samarinda
+            </h1>
+            <p class="mt-6 text-lg sm:text-xl lg:text-2xl opacity-90">
+                Memahami Segmentasi KPM untuk Intervensi Kebijakan yang Lebih Efektif
+            </p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <section id="pendahuluan" class="mb-16 scroll-mt-20 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6 section-title">Pendahuluan</h2>
+            <p class="mb-4 text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                Infografis ini menyajikan visualisasi hasil analisis klaster (K=2, K=3, dan K=4) terhadap Keluarga Penerima Manfaat (KPM) Bantuan Pangan Non Tunai (BPNT) di Kota Samarinda. Setiap solusi klaster dilengkapi dengan profil karakteristik utama dan rekomendasi kebijakan yang disarikan dari dokumen analisis. Tujuannya adalah untuk memberikan pemahaman yang lebih mendalam mengenai segmentasi KPM guna merancang intervensi kebijakan yang lebih tepat sasaran.
+            </p>
+        </section>
+
+        <section id="k2" class="mb-16 scroll-mt-20 pt-8">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-center section-title">Hasil Clustering K=2</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto">Pembagian KPM menjadi dua klaster utama menyoroti perbedaan mendasar berdasarkan usia dan struktur rumah tangga.</p>
+            
+            <div class="bg-white p-6 sm:p-8 rounded-xl card-shadow mb-10">
+                <h3 class="text-2xl font-semibold mb-6 text-center primary-text">Distribusi KPM (K=2 Klaster)</h3>
+                <div class="chart-container-donut">
+                    <canvas id="k2_distribusiKpmChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 0: Rumah Tangga Mapan & Dewasa/Lansia</h4>
+                    <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 9.159 KPM (48.6%)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia dominan tua/dewasa (rata-rata 54.7 thn), mayoritas Kepala Keluarga atau pasangan.</li>
+                        <li>Jumlah ART lebih sedikit (rata-rata 3.48 orang).</li>
+                        <li>Ekonomi: Pengeluaran/ART sedikit lebih tinggi, tabungan sedikit lebih rendah. Dominasi wiraswasta/pekerja bebas.</li>
+                        <li>Pendidikan cenderung lebih rendah (dominan SD & SMP).</li>
+                        <li>Hunian: Luas bangunan/kapita lebih besar.</li>
+                    </ul>
+                </div>
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 1: Rumah Tangga Muda & Anak-anak</h4>
+                    <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 9.670 KPM (51.4%)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia dominan muda (rata-rata 19.29 thn), mayoritas anak kandung, belum kawin.</li>
+                        <li>Jumlah ART lebih banyak (rata-rata 4.44 orang).</li>
+                        <li>Ekonomi: Pengeluaran/ART sedikit lebih rendah, tabungan sedikit lebih tinggi. Dominasi buruh/karyawan dan pelajar.</li>
+                        <li>Pendidikan cenderung lebih tinggi atau sedang menempuh.</li>
+                        <li>Hunian: Luas bangunan/kapita lebih kecil, proporsi hunian < 8 m²/kapita lebih tinggi.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-white p-6 sm:p-8 rounded-xl card-shadow table-container">
+                <h3 class="text-2xl font-semibold mb-6 text-center primary-text">Tabel Rekomendasi Kebijakan (K=2 Klaster)</h3>
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-3">Fokus Kebijakan</th>
+                            <th class="px-4 py-3">Klaster Target</th>
+                            <th class="px-4 py-3">Rekomendasi Konkret</th>
+                            <th class="px-4 py-3">OPD/Instansi Pelaksana</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td>Layanan Sosial, Kesehatan, Pemberdayaan Ekonomi Lansia/Dewasa</td>
+                            <td>Klaster 0</td>
+                            <td>Penguatan layanan kesehatan geriatri & Posyandu Lansia; Program pendampingan sosial lansia; Pelatihan vokasional & kewirausahaan usia produktif senior; Fasilitasi akses permodalan UMKM; Literasi keuangan (perencanaan pensiun).</td>
+                            <td>Dinas Sosial, Dinkes, DP3A, BKKBN, Dispora, Dinas KUKM, Disnaker, OJK, Perbankan.</td>
+                        </tr>
+                        <tr>
+                            <td>Kebutuhan Generasi Muda, Transisi Pendidikan ke Kerja, Isu Kepadatan Hunian</td>
+                            <td>Klaster 1</td>
+                            <td>Program pengembangan diri & life skills remaja; Layanan konseling kespro; Beasiswa & bantuan pendidikan; Program magang & Job Fair; BSPS/bedah rumah (prioritas keluarga besar, hunian padat); Sosialisasi rumah sehat; Literasi keuangan (investasi awal, menabung).</td>
+                            <td>DP3A, BKKBN, Dispora, Disnaker, Disdik, Dinas Perkim, Dinkes, Bappeda, OJK, Perbankan.</td>
+                        </tr>
+                         <tr>
+                            <td>Kualitas Fasilitas Dasar (Lintas Klaster)</td>
+                            <td>Klaster 0 & 1</td>
+                            <td>Program bantuan peningkatan kualitas lantai rumah (menjadi standar lebih sehat); Edukasi berkelanjutan mengenai pentingnya rumah sehat.</td>
+                            <td>Dinas Perkim, Dinas Sosial, Dinkes.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="k3" class="mb-16 scroll-mt-20 pt-8">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-center section-title">Hasil Clustering K=3</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto">Pembagian menjadi tiga klaster memberikan segmentasi yang lebih mendalam, menyoroti kelompok dengan tantangan hunian spesifik dan profil lansia yang berbeda.</p>
+
+            <div class="bg-white p-6 sm:p-8 rounded-xl card-shadow mb-10">
+                <h3 class="text-2xl font-semibold mb-6 text-center primary-text">Distribusi KPM (K=3 Klaster)</h3>
+                <div class="chart-container-donut">
+                    <canvas id="k3_distribusiKpmChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 0: Generasi Muda, RT Besar</h4>
+                    <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 9.253 KPM (49.1%)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia sangat muda (rata-rata 18.46 thn), ART terbanyak (4.46 orang).</li>
+                        <li>Pengeluaran/ART terendah, tabungan menengah.</li>
+                        <li>Pendidikan mayoritas SMA/sederajat, banyak usia sekolah/kuliah.</li>
+                        <li>Hunian: Luas bangunan/kapita menengah, proporsi < 8 m² cukup signifikan.</li>
+                    </ul>
+                </div>
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 1: Kepala Keluarga Paruh Baya, Hunian Sangat Terbatas</h4>
+                    <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 3.641 KPM (19.3%)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia paruh baya (rata-rata 51.24 thn), seluruhnya Kepala Keluarga, ART cukup banyak (4.15 orang).</li>
+                        <li>Tabungan tertinggi, pendidikan dominan SD/sederajat.</li>
+                        <li><span class="text-red-600 font-semibold">Hunian: Luas bangunan/kapita sangat rendah (15.24 m²).</span></li>
+                    </ul>
+                </div>
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 2: RT Mapan Lansia/Dewasa, ART Kecil</h4>
+                    <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 5.935 KPM (31.5%)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia paling tua (rata-rata 55.63 thn), ART tersedikit (3.11 orang), dominan perempuan.</li>
+                        <li>Pengeluaran/ART tertinggi, tabungan terendah.</li>
+                        <li>Hunian: Luas bangunan/kapita tertinggi.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-white p-6 sm:p-8 rounded-xl card-shadow table-container">
+                <h3 class="text-2xl font-semibold mb-6 text-center primary-text">Tabel Rekomendasi Kebijakan (K=3 Klaster)</h3>
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-3">Fokus Kebijakan</th>
+                            <th class="px-4 py-3">Klaster Target</th>
+                            <th class="px-4 py-3">Rekomendasi Konkret</th>
+                            <th class="px-4 py-3">OPD/Instansi Pelaksana</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td>Dukungan Pendidikan & Pengembangan Diri Generasi Muda</td>
+                            <td>Klaster 0</td>
+                            <td>Program beasiswa & bantuan perlengkapan sekolah/kuliah; Pengembangan youth center (keterampilan, olahraga, kreativitas); Pelatihan kerja & kewirausahaan pemuda.</td>
+                            <td>Disdik, Dispora, Disnaker, Dinas KUKM, DP3A.</td>
+                        </tr>
+                        <tr>
+                            <td>Intervensi Perumahan Mendesak & Sanitasi</td>
+                            <td>Klaster 1</td>
+                            <td>Prioritas BSPS/RTLH (fokus luas/kualitas); Program sanitasi lingkungan terpadu; Edukasi & fasilitasi KPR bersubsidi.</td>
+                            <td>Dinas Perkim, Dinkes, Dinas Sosial, Bappeda, Perbankan.</td>
+                        </tr>
+                        <tr>
+                            <td>Layanan Kesehatan Lansia & Kesejahteraan Sosial</td>
+                            <td>Klaster 2</td>
+                            <td>Penguatan Posyandu Lansia & home care; Literasi keuangan (pensiun, pengeluaran bijak); Kegiatan sosial & produktif lansia.</td>
+                            <td>Dinkes, Dinas Sosial, OJK/Perbankan, LPM.</td>
+                        </tr>
+                        <tr>
+                            <td>Peningkatan Kualitas Hunian & Pemberdayaan Ekonomi (Lintas Klaster)</td>
+                            <td>Semua (K=3)</td>
+                            <td>Bantuan peningkatan kualitas lantai rumah; Kampanye rumah sehat; Studi pola pengelolaan keuangan; Pengembangan produk keuangan mikro; Pelatihan pengelolaan usaha.</td>
+                            <td>Dinas Perkim, Dinkes, Dinas Sosial, Dinas KUKM, OJK/Perbankan, Bappeda, Akademisi.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="k4" class="mb-16 scroll-mt-20 pt-8">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-center section-title">Hasil Clustering K=4 (Solusi Terpilih)</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto">Pembagian menjadi empat klaster menciptakan segmen yang sangat berbeda dan tajam, terutama menyoroti polarisasi kondisi hunian. Solusi ini dianggap memberikan pemahaman paling komprehensif untuk perumusan kebijakan.</p>
+
+            <div class="bg-white p-6 sm:p-8 rounded-xl card-shadow mb-10">
+                <h3 class="text-2xl font-semibold mb-6 text-center primary-text">Distribusi KPM (K=4 Klaster)</h3>
+                <div class="chart-container-donut">
+                    <canvas id="k4_distribusiKpmChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 0: Keluarga Paruh Baya Mapan, Ruang Luas</h4>
+                    <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 3.513 KPM (18.7%)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia paruh baya (rata-rata 42.19 thn), dominan Perempuan, mayoritas Istri/Suami. ART cukup banyak (4.04 orang).</li>
+                        <li><span class="font-semibold text-green-600">Tabungan tertinggi (Rp 290.639).</span></li>
+                        <li><span class="font-semibold text-green-600">Hunian: Luas bangunan/kapita sangat tinggi (360.54 m²).</span></li>
+                    </ul>
+                </div>
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 1: Lansia Sejahtera, Ruang Sangat Luas, ART Kecil</h4>
+                     <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 3.463 KPM (18.4%)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia paling tua (rata-rata 64.52 thn), ART tersedikit (2.32 orang), dominan Perempuan, banyak janda/duda.</li>
+                        <li>Pengeluaran/ART tertinggi, <span class="font-semibold text-red-600">tabungan terendah (Rp 75.514).</span></li>
+                        <li><span class="font-semibold text-green-600">Hunian: Luas bangunan/kapita paling tinggi (379.96 m²).</span></li>
+                    </ul>
+                </div>
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 2: Generasi Muda, RT Besar, Hunian Terbatas</h4>
+                     <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 8.469 KPM (45.0% - Terbesar)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia paling muda (rata-rata 17.19 thn), ART terbanyak (4.53 orang), sangat dominan anak kandung/belum kawin.</li>
+                        <li>Pengeluaran/ART terendah, tabungan menengah.</li>
+                        <li><span class="font-semibold text-red-600">Hunian: Luas bangunan/kapita sangat rendah (14.46 m²).</span></li>
+                    </ul>
+                </div>
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow">
+                    <h4 class="text-xl font-semibold mb-4 secondary-text">Klaster 3: Kepala Keluarga Paruh Baya, Hunian Sangat Terbatas</h4>
+                     <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Jumlah Anggota:</span> 3.384 KPM (17.9%)</p>
+                    <h5 class="font-semibold text-dark-theme mb-2">Profil Utama:</h5>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 profile-list mb-4">
+                        <li>Usia paruh baya (rata-rata 50.34 thn), seluruhnya Kepala Keluarga (dominan laki-laki), ART banyak (4.23 orang).</li>
+                        <li>Tabungan cukup tinggi meskipun hunian sangat terbatas.</li>
+                        <li><span class="font-semibold text-red-600">Hunian: Luas bangunan/kapita sangat rendah (14.91 m²).</span></li>
+                    </ul>
+                </div>
+            </div>
+             <div class="bg-white p-6 sm:p-8 rounded-xl card-shadow mb-10 table-container">
+                <h3 class="text-2xl font-semibold mb-6 text-center primary-text">Tabel Rekomendasi Kebijakan (K=4 Klaster)</h3>
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-3">Fokus Kebijakan</th>
+                            <th class="px-4 py-3">Klaster Target</th>
+                            <th class="px-4 py-3">Rekomendasi Konkret</th>
+                            <th class="px-4 py-3">OPD/Instansi Pelaksana</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td>Optimalisasi Potensi & Pemberdayaan</td>
+                            <td>Klaster 0</td>
+                            <td>Sosialisasi program investasi & perencanaan keuangan; Pelibatan sebagai agen perubahan/relawan; Optimalisasi pemanfaatan pekarangan.</td>
+                            <td>Dinas KUKM, OJK/Perbankan, Dinas Pertanian/Ketapang, LPM.</td>
+                        </tr>
+                        <tr>
+                            <td>Layanan & Kesejahteraan Lansia</td>
+                            <td>Klaster 1</td>
+                            <td>Layanan kesehatan geriatri (Posyandu Lansia, home-care); Kaji skema "reverse mortgage"; Program pendampingan sosial & komunitas lansia.</td>
+                            <td>Dinkes, Dinas Sosial, OJK/Industri Keuangan, Kementerian ATR/BPN.</td>
+                        </tr>
+                        <tr>
+                            <td>Investasi pada Generasi Muda</td>
+                            <td>Klaster 2</td>
+                            <td>Bantuan biaya pendidikan (beasiswa, KIP); Penyediaan RBRA & fasilitas belajar komunal; Program gizi & kesehatan anak; Pelatihan keterampilan & kewirausahaan pemuda.</td>
+                            <td>Disdik, Dinkes, DP3A, Dispora, Dinas Sosial, Disnaker.</td>
+                        </tr>
+                         <tr>
+                            <td>Dukungan Kepala Keluarga Produktif</td>
+                            <td>Klaster 3</td>
+                            <td>Program KPR mikro/pembiayaan partisipatif; Pelatihan manajemen keuangan & perencanaan perumahan; Fasilitasi akses jaminan sosial.</td>
+                            <td>Dinas Perkim, Dinas KUKM, OJK/Perbankan, BPJS Ketenagakerjaan, Dinas Sosial.</td>
+                        </tr>
+                        <tr>
+                            <td>Intervensi Perumahan Mendesak (Lintas Klaster)</td>
+                            <td>Klaster 2 & 3</td>
+                            <td>Prioritaskan RTLH, Rusunawa, rumah khusus; Skema KPR bersubsidi mudah akses (utk Klaster 3); Pengembangan kawasan permukiman baru.</td>
+                            <td>Dinas Perkim, KemPUPR, Dinas Sosial, Bappeda, Perbankan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="bg-white p-6 sm:p-8 rounded-xl card-shadow">
+                <h3 class="text-2xl font-semibold mb-6 text-center primary-text">Polarisasi Kondisi Hunian (K=4 Klaster)</h3>
+                <div class="chart-container-bar">
+                    <canvas id="k4_luasBangunanChart"></canvas>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 text-center">Grafik ini menyoroti polarisasi tajam dalam luas bangunan per kapita: Klaster 0 & 1 memiliki ruang sangat luas, sementara Klaster 2 & 3 menghadapi keterbatasan ruang yang signifikan.</p>
+            </div>
+        </section>
+
+        <section id="rekomendasi-kebijakan-umum" class="mb-16 scroll-mt-20 pt-8">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-center section-title">Rekomendasi Kebijakan Strategis Umum (K=4)</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">Berikut adalah rangkuman rekomendasi kebijakan strategis berdasarkan temuan analisis K=4 klaster, yang bertujuan untuk meningkatkan efektivitas program dan kesejahteraan KPM secara lebih tertarget.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow rekomendasi-card">
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 secondary-text">1. Intervensi Perumahan Mendesak</h4>
+                        <p class="text-xs text-gray-500 mb-3">Target: Klaster 2 & 3 (K=4)</p>
+                        <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 recommendation-list">
+                            <li>Prioritaskan program perbaikan RTLH, Rusunawa, atau rumah khusus.</li>
+                            <li>Kembangkan skema KPR bersubsidi dengan persyaratan lebih mudah (khususnya Klaster 3).</li>
+                            <li>Pertimbangkan pengembangan kawasan permukiman baru yang terencana.</li>
+                        </ul>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4">OPD Terkait: Dinas Perkim, KemPUPR, Dinas Sosial, Bappeda, Perbankan.</p>
+                </div>
+
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow rekomendasi-card">
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 secondary-text">2. Investasi pada Generasi Muda</h4>
+                        <p class="text-xs text-gray-500 mb-3">Target: Klaster 2 (K=4)</p>
+                        <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 recommendation-list">
+                            <li>Perluas program bantuan biaya pendidikan (beasiswa, KIP).</li>
+                            <li>Sediakan Ruang Bermain Ramah Anak (RBRA) & fasilitas belajar komunal.</li>
+                            <li>Intensifkan program gizi tambahan dan pemeriksaan kesehatan rutin anak.</li>
+                            <li>Adakan pelatihan keterampilan dan kewirausahaan bagi pemuda.</li>
+                        </ul>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4">OPD Terkait: Dinas Pendidikan, Dinkes, DP3A, Dispora, Dinas Sosial, Disnaker.</p>
+                </div>
+
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow rekomendasi-card">
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 secondary-text">3. Dukungan Kepala Keluarga Produktif</h4>
+                        <p class="text-xs text-gray-500 mb-3">Target: Klaster 3 (K=4)</p>
+                        <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 recommendation-list">
+                            <li>Program KPR mikro atau skema pembiayaan perumahan partisipatif (manfaatkan tabungan).</li>
+                            <li>Pelatihan manajemen keuangan keluarga dan perencanaan perumahan.</li>
+                            <li>Fasilitasi akses ke program jaminan sosial ketenagakerjaan (sektor informal).</li>
+                        </ul>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4">OPD Terkait: Dinas Perkim, Dinas KUKM, OJK/Perbankan, BPJS Ketenagakerjaan, Dinas Sosial.</p>
+                </div>
+                
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow rekomendasi-card">
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 secondary-text">4. Layanan & Kesejahteraan Lansia</h4>
+                        <p class="text-xs text-gray-500 mb-3">Target: Klaster 1 (K=4)</p>
+                        <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 recommendation-list">
+                            <li>Perkuat layanan kesehatan geriatri (Posyandu Lansia, home-care).</li>
+                            <li>Kaji skema "reverse mortgage" atau opsi pemanfaatan aset properti.</li>
+                            <li>Program pendampingan sosial dan kegiatan komunitas untuk lansia.</li>
+                        </ul>
+                    </div>
+                     <p class="text-xs text-gray-500 mt-4">OPD Terkait: Dinkes, Dinas Sosial, OJK/Industri Keuangan, Kementerian ATR/BPN.</p>
+                </div>
+
+                <div class="bg-light-blue-card p-6 rounded-xl card-shadow rekomendasi-card">
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 secondary-text">5. Optimalisasi Potensi & Pemberdayaan</h4>
+                        <p class="text-xs text-gray-500 mb-3">Target: Klaster 0 (K=4)</p>
+                        <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 recommendation-list">
+                            <li>Sosialisasi program investasi dan perencanaan keuangan jangka panjang.</li>
+                            <li>Libatkan sebagai agen perubahan atau relawan dalam program sosial.</li>
+                            <li>Optimalisasi pemanfaatan lahan pekarangan rumah untuk kegiatan produktif.</li>
+                        </ul>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4">OPD Terkait: Dinas KUKM, OJK/Perbankan, Dinas Pertanian/Ketapang, LPM.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="kesimpulan-infografis" class="mb-12 scroll-mt-20 pt-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6 section-title">Kesimpulan Infografis</h2>
+            <p class="mb-4 text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                Analisis klaster dengan jumlah K yang berbeda (K=2, K=3, dan K=4) memberikan perspektif yang semakin mendalam mengenai segmentasi KPM BPNT di Kota Samarinda. Solusi K=2 menunjukkan dikotomi dasar berdasarkan usia dan struktur keluarga. Peningkatan ke K=3 mulai mengidentifikasi kelompok dengan tantangan hunian spesifik dan profil lansia yang berbeda.
+            </p>
+            <p class="mb-4 text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                Solusi **K=4 klaster** terbukti memberikan pemahaman yang paling tajam dan actionable. Temuan utama adalah adanya **polarisasi kondisi hunian** yang ekstrem, dimana dua klaster (Klaster 0 dan 1) menikmati ruang hidup yang sangat luas, sementara dua klaster lainnya (Klaster 2 dan 3, yang mencakup mayoritas KPM) hidup dalam kondisi hunian per kapita yang sangat terbatas. Klaster 2, yang merupakan kelompok terbesar, terdiri dari generasi muda dalam rumah tangga besar dengan tantangan ekonomi dan hunian. Klaster 3 menyoroti kepala keluarga produktif yang juga menghadapi keterbatasan hunian meskipun memiliki tabungan.
+            </p>
+            <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                Temuan ini menggarisbawahi pentingnya intervensi kebijakan yang sangat spesifik dan tertarget, terutama dalam program perumahan, dukungan pendidikan dan keterampilan bagi generasi muda, serta pemberdayaan ekonomi yang disesuaikan dengan profil unik masing-masing klaster untuk meningkatkan kesejahteraan KPM secara efektif.
+            </p>
+        </section>
+    </main>
+
+    <footer class="secondary-bg text-white text-center p-8 mt-12">
+        <p class="text-sm">Sumber Data: Analisis Klaster KPM BPNT 2025 Kota Samarinda (Ahmad Sopian, 23 Mei 2025)</p>
+        <p class="text-xs mt-1">Infografis ini bertujuan untuk visualisasi dan pemahaman data.</p>
+    </footer>
+
+    <script>
+        const chartTooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const processLabel = (label, maxLength = 16) => {
+            if (typeof label === 'string' && label.length > maxLength) {
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine.trim());
+                        currentLine = word + ' ';
+                    } else {
+                        currentLine += word + ' ';
+                    }
+                }
+                lines.push(currentLine.trim());
+                return lines.filter(line => line.length > 0);
+            }
+            return label;
+        };
+        
+        const commonChartOptions = (yAxisTitle = '') => ({
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { font: { family: 'Inter', size: 11 } }
+                },
+                tooltip: {
+                    callbacks: { title: chartTooltipTitleCallback },
+                    bodyFont: { family: 'Inter' },
+                    titleFont: { family: 'Inter' }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: { font: { family: 'Inter', size: 10 } },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    title: { display: !!yAxisTitle, text: yAxisTitle, font: { family: 'Inter', size: 11 } }
+                },
+                x: {
+                    ticks: { 
+                        font: { family: 'Inter', size: 9 },
+                        callback: function(value, index, values) {
+                            return processLabel(this.getLabelForValue(value), 10);
+                        }
+                    },
+                    grid: { display: false }
+                }
+            }
+        });
+        
+        const donutChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { 
+                        font: { family: 'Inter', size: 10 },
+                        padding: 12,
+                        usePointStyle: true,
+                        pointStyle: 'rectRounded',
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            if (data.labels.length && data.datasets.length) {
+                                return data.labels.map(function(label, i) {
+                                    const meta = chart.getDatasetMeta(0);
+                                    const style = meta.controller.getStyle(i);
+                                    let labelText = Array.isArray(label) ? label[0] : label;
+                                    if (labelText.includes(':')) labelText = labelText.substring(0, labelText.indexOf(':'));
+                                    if (labelText.length > 25) labelText = labelText.substring(0, 22) + '...';
+                                    
+                                    return {
+                                        text: `${labelText} (${data.datasets[0].data[i]}%)`,
+                                        fillStyle: style.backgroundColor,
+                                        strokeStyle: style.borderColor,
+                                        lineWidth: style.borderWidth,
+                                        hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
+                                        index: i
+                                    };
+                                });
+                            }
+                            return [];
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: chartTooltipTitleCallback,
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (Array.isArray(label)) label = label.join(' ');
+                            if (label) label = label.split(':')[0].trim(); 
+                            if (label) label += ': ';
+                            if (context.parsed !== null) label += context.parsed + '%';
+                            return label;
+                        }
+                    },
+                    bodyFont: { family: 'Inter' },
+                    titleFont: { family: 'Inter' }
+                }
+            }
+        };
+
+        const palette = {
+            blue1: '#0077B6', 
+            blue2: '#00B4D8', 
+            blue3: '#90E0EF', 
+            blue4: '#CAF0F8', 
+            blue5: '#ADE8F4', 
+            darkText: '#023047',
+            white: '#FFFFFF'
+        };
+
+        const k2_distribusiData = {
+            labels: [processLabel('Klaster 0: RT Mapan & Dewasa/Lansia'), processLabel('Klaster 1: RT Muda & Anak-anak')],
+            datasets: [{
+                data: [ 48.6, 51.4 ],
+                backgroundColor: [palette.blue1, palette.blue2],
+                borderColor: [palette.white, palette.white], borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('k2_distribusiKpmChart').getContext('2d'), { type: 'doughnut', data: k2_distribusiData, options: donutChartOptions });
+
+        const k3_distribusiData = {
+            labels: [processLabel('Klaster 0: Generasi Muda, RT Besar'), processLabel('Klaster 1: KRT Paruh Baya, Hunian Terbatas'), processLabel('Klaster 2: RT Mapan Lansia/Dewasa, ART Kecil')],
+            datasets: [{
+                data: [ 49.1, 19.3, 31.5 ],
+                backgroundColor: [palette.blue1, palette.blue2, palette.blue3],
+                borderColor: [palette.white, palette.white, palette.white], borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('k3_distribusiKpmChart').getContext('2d'), { type: 'doughnut', data: k3_distribusiData, options: donutChartOptions });
+        
+        const k4_distribusiData = {
+            labels: [
+                processLabel('Klaster 0: Kel. Paruh Baya Mapan'), 
+                processLabel('Klaster 1: Lansia Sejahtera'), 
+                processLabel('Klaster 2: Generasi Muda, Hunian Terbatas'), 
+                processLabel('Klaster 3: KRT Paruh Baya, Hunian Terbatas')
+            ],
+            datasets: [{
+                data: [ 18.7, 18.4, 45.0, 17.9 ],
+                backgroundColor: [palette.blue1, palette.blue2, palette.blue3, palette.blue5],
+                borderColor: [palette.white, palette.white, palette.white, palette.white], borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('k4_distribusiKpmChart').getContext('2d'), { type: 'doughnut', data: k4_distribusiData, options: donutChartOptions });
+
+        const k4_luasBangunanData = {
+            labels: [processLabel('Klaster 0: Kel. Paruh Baya Mapan'), processLabel('Klaster 1: Lansia Sejahtera'), processLabel('Klaster 2: Generasi Muda, Hunian Terbatas'), processLabel('Klaster 3: KRT Paruh Baya, Hunian Terbatas')],
+            datasets: [{
+                label: 'Rata-rata Luas Bangunan/Kapita (m²)',
+                data: [360.54, 379.96, 14.46, 14.91],
+                backgroundColor: [palette.blue1, palette.blue2, palette.blue3, palette.blue5],
+                borderColor: palette.darkText, borderWidth: 1, borderRadius: 4
+            }]
+        };
+        new Chart(document.getElementById('k4_luasBangunanChart').getContext('2d'), { type: 'bar', data: k4_luasBangunanData, options: commonChartOptions('Luas Bangunan/Kapita (m²)') });
+        
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconMenu = document.getElementById('icon-menu');
+        const iconClose = document.getElementById('icon-close');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            iconMenu.classList.toggle('hidden');
+            iconClose.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('#mobile-menu a, #desktop-nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    iconMenu.classList.remove('hidden');
+                    iconClose.classList.add('hidden');
+                }
+            });
+        });
+
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('#desktop-nav-links a, #mobile-menu a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - sectionHeight / 2.5)) { 
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav-link');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active-nav-link');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
